@@ -14,8 +14,7 @@ var bullets;
 var bulletTime = 0;
 var enemies;
 var enemyBullets2;
-var enemyBullets1;
-var enemies3;
+var enemyBullets1;;
 var enemyFiring;
 var enemyFiring2;
 
@@ -27,21 +26,23 @@ var SceneGame = new Phaser.Class({
   init: function () { },
   preload: function () {
     this.load.image('spaceBackground', 'assets/spaceBackground.png');
-    this.load.image('enemy1', 'assets/resize_enemyShip.png');
+    this.load.image('enemy1', 'assets/enemyShip.png');
     this.load.image('enemy2', 'assets/enemyShip2.png');
     this.load.image('bullet', 'assets/bullet0.png');
     this.load.image('bullet2', 'assets/bullet2.png');
     this.load.image('bullet3', 'assets/bullet03.png');
-    this.load.image('playerShip', 'assets/resize_playerShip.png');
-
-    this.load.audio('shootShip', 'assets/audio/pickup.wav');
+    this.load.image('playerShip', 'assets/playerShip.png');
+    this.load.spritesheet('explode1', 'assets/explode1.png', { frameWidth: 130, frameHeight: 120 });
+    this.load.audio('shootShip', 'assets/audio/audioShoot1.wav');
     this.load.audio('death', 'assets/audio/player_death.wav');
+    this.load.audio('deathEnemy', 'assets/audio/deathEnemy.wav');
   },
   create: function () {
     this.add.image(400, 300, 'spaceBackground');
 
-    // takestarSound = this.sound.add('takestar')
-    // deathSound = this.sound.add('death')
+    shootShipSound = this.sound.add('shootShip')
+    deathSound = this.sound.add('death')
+    deathEnemySound = this.sound.add('deathEnemy');
 
     var Bullet = new Phaser.Class({
       Extends: Phaser.GameObjects.Image,
@@ -110,6 +111,12 @@ var SceneGame = new Phaser.Class({
     player.setBounce(0.3);
     player.body.allowGravity = false;
     player.setCollideWorldBounds(true);
+    this.anims.create({
+      key: 'playerDead',
+      frames: this.anims.generateFrameNumbers('explode1', { start: 0, end: 3 }),
+      frameRate: 10,
+      repeat: -1
+    });
 
     bullets = this.physics.add.group({
       classType: Bullet,
@@ -180,12 +187,12 @@ var SceneGame = new Phaser.Class({
       callback: fireBulletFromEnemy2
     });
 
-
     cursors = this.input.keyboard.createCursorKeys();
     spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
     this.physics.add.collider(player, enemies);
     this.physics.add.collider(bullets, enemies);
+    this.physics.add.collider(bullets, enemy2);
     this.physics.add.overlap(player, enemyBullets2, endGame, null, this);
     this.physics.add.overlap(player, enemyBullets1, endGame, null, this);
     this.physics.add.overlap(bullets, enemies, destroyEnemy, null, this);
@@ -200,6 +207,7 @@ var SceneGame = new Phaser.Class({
     player.body.velocity.y = 0;
 
     if (gameOver) {
+      gameOver = false;
       this.time.addEvent({
         delay: 2000,
         loop: false,
@@ -223,6 +231,7 @@ var SceneGame = new Phaser.Class({
 
         if (bullet)
         {
+            shootShipSound.play();
             bullet.fire(player.x, player.y);
             lastFired = time + 80;
         }
@@ -259,9 +268,8 @@ var SceneGame = new Phaser.Class({
 })
 
 function endGame() {
-  console.log("GAME-OVER")
-  console.log("maxScore",getScore('maxScore'))
-  console.log("score", score)
+  deathSound.play();
+  player.anims.play('playerDead', true);
   if(score > getScore('maxScore')) {
     updateScore(this.scene, score, 'maxScore')
   }
@@ -271,6 +279,7 @@ function endGame() {
 }
 
 function destroyEnemy(bullet, enemie) {
+  deathEnemySound.play();
   bullet.destroy();
   enemie.disableBody(true, true);
 
@@ -285,13 +294,12 @@ function destroyEnemy(bullet, enemie) {
   }
 
 }
-function destroyEnemy2(bullet) {
-
-  enemyFiring2.remove();
+function destroyEnemy2(bullet, enemy2) {
+  deathEnemySound.play();
   bullet.destroy();
+  enemyFiring2.remove();
   enemy2.destroy();
   enemyBullets2.clear(true, true);
-
 
   score += 200;
   updateScore(this.scene, score, 'score')

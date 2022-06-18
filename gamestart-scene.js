@@ -53,7 +53,6 @@ var SceneGameStart = new Phaser.Class({
         fontStyle: 'bold'
       }
     ).setOrigin(0.5);
-    
 
     enterKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
     resetKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
