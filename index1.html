@@ -5,10 +5,11 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Phaser Escenas</title>
+  <title>War Ship</title>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.54.0/phaser.min.js"></script>
   <script src="gamestart-scene.js"></script>
+  <script src="control-scene.js"></script>
   <script src="game-scene.js"></script>
   <script src="gameover-scene.js"></script>
 
@@ -27,7 +28,7 @@
       width: 800,
       height: 600,
       backgroundColor: "#212121",
-      scene: [ SceneGameStart, SceneGame, SceneGameOver ],
+      scene: [ SceneGameStart, SceneControl, SceneGame, SceneGameOver ],
       physics: {
         default: 'arcade',
         arcade: {

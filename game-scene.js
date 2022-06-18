@@ -1,4 +1,3 @@
-
 var platforms;
 var player;
 var enemy;
@@ -7,7 +6,6 @@ var spaceBar;
 var score = 0;
 var scoreText;
 var gameOver = false;
-var takestarSound;
 var deathSound;
 var lastFired = 0;
 var lastFiredEnemy = 0;
@@ -29,15 +27,12 @@ var SceneGame = new Phaser.Class({
   init: function () { },
   preload: function () {
     this.load.image('spaceBackground', 'assets/spaceBackground.png');
-    // this.load.image('ground', 'assets/platform.png');
-    // this.load.image('star', 'assets/star.png');
     this.load.image('enemy1', 'assets/resize_enemyShip.png');
     this.load.image('enemy2', 'assets/enemyShip2.png');
     this.load.image('bullet', 'assets/bullet0.png');
     this.load.image('bullet2', 'assets/bullet2.png');
     this.load.image('bullet3', 'assets/bullet03.png');
     this.load.image('playerShip', 'assets/resize_playerShip.png');
-    // this.load.spritesheet('playerShip', 'assets/playerShip.png', { frameWidth: 32, frameHeight: 48 });
 
     this.load.audio('shootShip', 'assets/audio/pickup.wav');
     this.load.audio('death', 'assets/audio/player_death.wav');
@@ -48,18 +43,8 @@ var SceneGame = new Phaser.Class({
     // takestarSound = this.sound.add('takestar')
     // deathSound = this.sound.add('death')
 
-    //BULLETS
-    // bullets = this.add.group();
-    // bullets.enableBody = true;
-    // bullets.physicsBodyType = Phaser.Physics.ARCADE;
-
-    // bullets.createMultiple(10, 'bullet');
-    // bullets.callAll('events.onOutOfBounds.add', 'events.onOutOfBounds', resetBullet, this);
-    // bullets.setAll('checkWorldBounds', true);
     var Bullet = new Phaser.Class({
-
       Extends: Phaser.GameObjects.Image,
-
       initialize:
 
       function Bullet (scene)
@@ -91,9 +76,7 @@ var SceneGame = new Phaser.Class({
     });
 
     var EnemyBullet = new Phaser.Class({
-
       Extends: Phaser.GameObjects.Image,
-
       initialize:
 
       function Bullet (scene)
@@ -208,6 +191,7 @@ var SceneGame = new Phaser.Class({
     this.physics.add.overlap(bullets, enemies, destroyEnemy, null, this);
     this.physics.add.overlap(bullets, enemy2, destroyEnemy2, null, this);
 
+    setScore(this.scene);
     scoreText = this.add.text(15, 15, 'Score: 0', { fontSize: '32px', fill: '#00e676' })
   },
 
@@ -276,6 +260,11 @@ var SceneGame = new Phaser.Class({
 
 function endGame() {
   console.log("GAME-OVER")
+  console.log("maxScore",getScore('maxScore'))
+  console.log("score", score)
+  if(score > getScore('maxScore')) {
+    updateScore(this.scene, score, 'maxScore')
+  }
   this.physics.pause();
 
   gameOver = true;
@@ -286,6 +275,7 @@ function destroyEnemy(bullet, enemie) {
   enemie.disableBody(true, true);
 
   score += 100;
+  updateScore(this.scene, score, 'score')
   scoreText.setText('Score: ' + score);
 
   if (enemies.countActive(true) === 0) {
@@ -295,7 +285,7 @@ function destroyEnemy(bullet, enemie) {
   }
 
 }
-function destroyEnemy2(bullet, enemy) {
+function destroyEnemy2(bullet) {
 
   enemyFiring2.remove();
   bullet.destroy();
@@ -304,6 +294,7 @@ function destroyEnemy2(bullet, enemy) {
 
 
   score += 200;
+  updateScore(this.scene, score, 'score')
   scoreText.setText('Score: ' + score);
 
 }
@@ -324,7 +315,6 @@ function fireBulletFromEnemy1() {
     }
   }
 }
-
 
 function fireBulletFromEnemy2() {
     fireBulletFromGroup(enemyBullets2, enemy2.x, enemy2.y + 32, 0, 150);
@@ -348,3 +338,24 @@ function fireBullet(bullet, x, y, vx, vy) {
   bullet.enableBody(true, x, y, true, true);
   bullet.setVelocity(vx, vy);
 }
+
+function setScore (scene) {
+  scene.score = parseInt(localStorage.getItem('score')) || 0;
+  console.log("SCORE", scene.score)
+};
+
+function updateScore(scene, increment, key) {
+  console.log("updateScore-increment", increment)
+  console.log("updateScore-key", key)
+  if('maxScore' === key){
+    console.log("update max", increment)
+    localStorage.setItem(key, increment);
+  } else {
+    console.log("update score", increment)
+    localStorage.setItem(key, increment);
+  }
+};
+
+function getScore (key) {
+  return parseInt(localStorage.getItem(key)) || 0;
+};
