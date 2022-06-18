@@ -39,7 +39,7 @@ var SceneGame = new Phaser.Class({
   },
   create: function () {
     this.add.image(400, 300, 'spaceBackground');
-
+    score = 0;
     shootShipSound = this.sound.add('shootShip')
     deathSound = this.sound.add('death')
     deathEnemySound = this.sound.add('deathEnemy');
@@ -349,17 +349,12 @@ function fireBullet(bullet, x, y, vx, vy) {
 
 function setScore (scene) {
   scene.score = parseInt(localStorage.getItem('score')) || 0;
-  console.log("SCORE", scene.score)
 };
 
 function updateScore(scene, increment, key) {
-  console.log("updateScore-increment", increment)
-  console.log("updateScore-key", key)
   if('maxScore' === key){
-    console.log("update max", increment)
     localStorage.setItem(key, increment);
   } else {
-    console.log("update score", increment)
     localStorage.setItem(key, increment);
   }
 };
