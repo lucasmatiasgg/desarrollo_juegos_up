@@ -45,7 +45,7 @@ var SceneGameOver = new Phaser.Class({
   },
 
   update: function () {
-    counter.setText("Volviento al menú principal: " + timedEvent.repeatCount);
+    counter.setText("Volviendo al menú principal: " + timedEvent.repeatCount);
 
     if(timedEvent.repeatCount === 0) {
       this.scene.start('SceneGameStart');
