@@ -1,4 +1,5 @@
-var cursors;
+var counter;
+var timedEvent;
 
 var SceneGameOver = new Phaser.Class({
   Extends: Phaser.Scene,
@@ -24,15 +25,30 @@ var SceneGameOver = new Phaser.Class({
       }
     ).setOrigin(0.5);
 
-    this.time.addEvent({
-      delay: 4000,
-      loop: false,
-      callback: () => {
-        this.scene.start('SceneGameStart')
+    counter = this.add.text(
+      400,
+      450,
+      "",
+      {
+        fontSize: 20,
+        color: '#00c853',
       }
+    ).setOrigin(0.5);
+
+    timedEvent = this.time.addEvent({
+      delay: 1000,
+      loop: false,
+      repeat: 4,
+      callback: () => {}
     })
 
   },
 
-  update: function () {}
+  update: function () {
+    counter.setText("Volviento al menú principal: " + timedEvent.repeatCount);
+
+    if(timedEvent.repeatCount === 0) {
+      this.scene.start('SceneGameStart');
+    }
+  }
 })
