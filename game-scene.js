@@ -17,13 +17,17 @@ var enemyBullets2;
 var enemyBullets1;;
 var enemyFiring;
 var enemyFiring2;
+var level = 1;
+var levelText;
+var enemyEliminatedCount = 0;
 
 var SceneGame = new Phaser.Class({
   Extends: Phaser.Scene,
   initialize: function () {
     Phaser.Scene.call(this, { 'key': 'SceneGame' });
   },
-  init: function () { },
+  init: function () {
+   },
   preload: function () {
     this.load.image('spaceBackground', 'assets/spaceBackground.png');
     this.load.image('enemy1', 'assets/enemyShip.png');
@@ -37,9 +41,21 @@ var SceneGame = new Phaser.Class({
     this.load.audio('death', 'assets/audio/player_death.wav');
     this.load.audio('deathEnemy', 'assets/audio/deathEnemy.wav');
   },
-  create: function () {
+  create: function (data) {
+    enemyEliminatedCount= 0
     this.add.image(400, 300, 'spaceBackground');
-    score = 0;
+
+    if(!data.comeFromAnotherLevel){
+      console.log("PRIMERA VEZ");
+      score = 0;
+    } else {
+      enemyEliminatedCount = 0;
+      level = data.level;
+      score = data.score;
+
+      console.log("PEGAMOS LA VUELTA");
+      console.log("LEVEL:", level);
+    }
     shootShipSound = this.sound.add('shootShip')
     deathSound = this.sound.add('death')
     deathEnemySound = this.sound.add('deathEnemy');
@@ -199,7 +215,8 @@ var SceneGame = new Phaser.Class({
     this.physics.add.overlap(bullets, enemy2, destroyEnemy2, null, this);
 
     setScore(this.scene);
-    scoreText = this.add.text(15, 15, 'Score: 0', { fontSize: '32px', fill: '#00e676' })
+    scoreText = this.add.text(15, 15, 'Score:' + score, { fontSize: '32px', fill: '#00e676' })
+    levelText = this.add.text(550, 15, 'Level:' + level, { fontSize: '32px', fill: '#00e676' })
   },
 
   update: function (time) {
@@ -264,6 +281,12 @@ var SceneGame = new Phaser.Class({
         });
     }
 
+    if(enemyEliminatedCount >= 2) {
+      console.log("NIVEL TERMINADO:", level)
+      this.scene.start('SceneGameLevel2', {'score': score, 'playerX' : player.x, "level": level + 1})
+      this.scene.stop('SceneGame');
+    }
+
   }
 })
 
@@ -288,6 +311,7 @@ function destroyEnemy(bullet, enemie) {
   scoreText.setText('Score: ' + score);
 
   if (enemies.countActive(true) === 0) {
+    enemyEliminatedCount += 1;
     enemies.children.iterate(function (child) {
       child.enableBody(true, child.x, 100, true, true);
     })
@@ -301,6 +325,8 @@ function destroyEnemy2(bullet, enemy2) {
   enemy2.destroy();
   enemyBullets2.clear(true, true);
 
+  enemyEliminatedCount += 1;
+  console.log("_COUNT:", enemyEliminatedCount);
   score += 200;
   updateScore(this.scene, score, 'score')
   scoreText.setText('Score: ' + score);

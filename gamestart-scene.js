@@ -7,7 +7,11 @@ var SceneGameStart = new Phaser.Class({
   initialize: function () {
     Phaser.Scene.call(this, { 'key': 'SceneGameStart' });
   },
-  init: function () {},
+  init: function () {
+    console.log("PREVIOUS", this.scene);
+    this.scene.stop("SceneGameLevel2")
+    console.log("AFTER", this.scene);
+  },
   preload: function () {},
   create: function () {
     this.add.text(
