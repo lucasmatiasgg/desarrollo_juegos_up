@@ -89,7 +89,9 @@ var SceneGameLevel2 = new Phaser.Class({
       {
           Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bullet2');
 
-          this.speed = Phaser.Math.GetSpeed(400, 1);
+          const speed = level > 2 ? 400 + level * 10 : 400;
+
+          this.speed = Phaser.Math.GetSpeed(speed, 1);
       },
 
       fire: function (x, y)
@@ -351,7 +353,6 @@ function endGame() {
 }
 
 function destroyEnemyStatic(bullet, enemie) {
-  console.log("ENEMY ELIMINADO: ", enemyEliminatedCountLevel2)
   deathEnemySound.play();
   bullet.destroy();
   enemie.disableBody(true, true);
@@ -378,7 +379,6 @@ function destroyEnemy3(bullet, enemy3) {
   score += 200;
   updateScore(this.scene, score, 'score')
   scoreText.setText('Score: ' + score);
-  console.log("ENEMY ELIMINADO: ", enemyEliminatedCountLevel2)
 }
 
 function destroyEnemy4(bullet, enemy4) {
@@ -392,7 +392,6 @@ function destroyEnemy4(bullet, enemy4) {
   score += 200;
   updateScore(this.scene, score, 'score')
   scoreText.setText('Score: ' + score);
-  console.log("ENEMY ELIMINADO: ", enemyEliminatedCountLevel2)
 }
 
 function destroyEnemy5(bullet, enemy5) {
@@ -406,7 +405,6 @@ function destroyEnemy5(bullet, enemy5) {
   score += 200;
   updateScore(this.scene, score, 'score')
   scoreText.setText('Score: ' + score);
-  console.log("ENEMY ELIMINADO: ", enemyEliminatedCountLevel2)
 }
 
 function createBullet(bullet) {

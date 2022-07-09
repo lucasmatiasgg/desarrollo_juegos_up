@@ -48,6 +48,7 @@ var SceneGame = new Phaser.Class({
     if(!data.comeFromAnotherLevel){
       console.log("PRIMERA VEZ");
       score = 0;
+      level = 1;
     } else {
       enemyEliminatedCount = 0;
       level = data.level;
@@ -100,7 +101,9 @@ var SceneGame = new Phaser.Class({
       {
           Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bullet2');
 
-          this.speed = Phaser.Math.GetSpeed(400, 1);
+          const speed = level > 1 ? 400 + level * 10 : 400;
+
+          this.speed = Phaser.Math.GetSpeed(speed, 1);
       },
 
       fire: function (x, y)

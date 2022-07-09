@@ -91,7 +91,7 @@ var SceneGameStart = new Phaser.Class({
 
     if (enterKey.isDown) {
       localStorage.setItem('score', 0);
-      this.scene.start('SceneGame')
+      this.scene.start('SceneGame', {"comeFromAnotherLevel": false})
     } else if(resetKey.isDown) {
       localStorage.setItem('maxScore', 0);
       localStorage.setItem('score', 0);

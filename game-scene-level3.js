@@ -18,8 +18,10 @@ var enemyBullets6;
 var enemyBullets7;
 var enemyBullets8;
 var enemyBullets9;
-var enemyFiring;
-var enemyFiring2;
+var enemyFiring6;
+var enemyFiring7;
+var enemyFiring8;
+var enemyFiring9;
 var enemyEliminatedCount3 = 0;
 var levelText;
 
@@ -91,7 +93,9 @@ var SceneGameLevel3 = new Phaser.Class({
       {
           Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bullet2');
 
-          this.speed = Phaser.Math.GetSpeed(400, 1);
+          const speed = level > 3 ? 400 + level * 10 : 400;
+
+          this.speed = Phaser.Math.GetSpeed(speed, 1);
       },
 
       fire: function (x, y)
@@ -282,13 +286,13 @@ var SceneGameLevel3 = new Phaser.Class({
     });
 
     enemyFiring7 = this.time.addEvent({
-      delay: 1000,
+      delay: 800,
       loop: true,
       callback: fireBulletFromEnemy7
     });
 
     enemyFiring8 = this.time.addEvent({
-      delay: 1000,
+      delay: 1300,
       loop: true,
       callback: fireBulletFromEnemy8
     });
@@ -362,10 +366,18 @@ var SceneGameLevel3 = new Phaser.Class({
       player.setVelocityX(0);
     }
 
-    screenControlEnemy6(enemy6, this.tweens);
-    screenControlEnemy7(enemy7, this.tweens);
-    screenControlEnemy8(enemy8, this.tweens);
-    screenControlEnemy9(enemy9, this.tweens);
+    if(enemy6){
+      screenControlEnemy6(enemy6, this.tweens);
+    }
+    if(enemy7){
+      screenControlEnemy7(enemy7, this.tweens);
+    }
+    if(enemy8){
+      screenControlEnemy8(enemy8, this.tweens);
+    }
+    if(enemy9){
+      screenControlEnemy9(enemy9, this.tweens);
+    }
 
     if(enemyEliminatedCount3 >= 5) {
       enemyEliminatedCount3 = 0;
@@ -410,13 +422,13 @@ function destroyEnemyStatic3(bullet, enemie) {
 }
 
 function destroyEnemy6(bullet, enemy6) {
+  enemyEliminatedCount3 += 1;
+  console.log("enemyEliminatedCount3: ", enemyEliminatedCount3)
   deathEnemySound.play();
   bullet.destroy();
   enemyFiring6.remove();
   enemy6.destroy();
   enemyBullets6.clear(true, true);
-  enemyEliminatedCount3 += 1;
-  console.log("enemyEliminatedCount3: ", enemyEliminatedCount3)
   score += 250;
   updateScore(this.scene, score, 'score')
   scoreText.setText('Score: ' + score);
@@ -424,13 +436,13 @@ function destroyEnemy6(bullet, enemy6) {
 }
 
 function destroyEnemy7(bullet, enemy7) {
+  enemyEliminatedCount3 =+ 1;
+  console.log("enemyEliminatedCount3: ", enemyEliminatedCount3)
   deathEnemySound.play();
   bullet.destroy();
   enemyFiring7.remove();
   enemy7.destroy();
   enemyBullets7.clear(true, true);
-  enemyEliminatedCount3 =+ 1;
-  console.log("enemyEliminatedCount3: ", enemyEliminatedCount3)
   score += 250;
   updateScore(this.scene, score, 'score')
   scoreText.setText('Score: ' + score);
@@ -438,13 +450,13 @@ function destroyEnemy7(bullet, enemy7) {
 }
 
 function destroyEnemy8(bullet, enemy8) {
+  enemyEliminatedCount3 += 1;
+  console.log("enemyEliminatedCount3: ", enemyEliminatedCount3)
   deathEnemySound.play();
   bullet.destroy();
   enemyFiring8.remove();
   enemy8.destroy();
   enemyBullets8.clear(true, true);
-  enemyEliminatedCount3 += 1;
-  console.log("enemyEliminatedCount3: ", enemyEliminatedCount3)
   score += 250;
   updateScore(this.scene, score, 'score')
   scoreText.setText('Score: ' + score);
@@ -452,13 +464,13 @@ function destroyEnemy8(bullet, enemy8) {
 }
 
 function destroyEnemy9(bullet, enemy9) {
+  enemyEliminatedCount3 += 1;
+  console.log("enemyEliminatedCount3: ", enemyEliminatedCount3)
   deathEnemySound.play();
   bullet.destroy();
   enemyFiring9.remove();
   enemy9.destroy();
   enemyBullets9.clear(true, true);
-  enemyEliminatedCount3 += 1;
-  console.log("enemyEliminatedCount3: ", enemyEliminatedCount3)
   score += 200;
   updateScore(this.scene, score, 'score')
   scoreText.setText('Score: ' + score);
